@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EquipoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JugadorController;
+use App\Http\Controllers\PartidoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,5 +22,6 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('equipos', EquipoController::class)->middleware('auth');
 Route::resource('jugadores', JugadorController::class)->middleware('auth');
+Route::resource('partidos', PartidoController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';

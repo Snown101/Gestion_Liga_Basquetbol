@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Equipo extends Model
 {
-    //
+    protected $fillable = [
+        'nombre',
+        'ciudad',
+        'entrenador',
+        'fundado',
+    ];
 }
