@@ -73,4 +73,48 @@ class PartidoController extends Controller
         return redirect()->route('partidos.index')
             ->with('success', 'Partido eliminado correctamente.');
     }
+    public function estadisticas()
+    {
+        $partidosFinalizados = Partido::with(['equipoLocal', 'equipoVisitante'])
+            ->where('estado', 'Finalizado')
+            ->orderBy('fecha', 'desc')
+            ->get();
+
+        $equipos = Equipo::withCount([
+            'jugadores',
+        ])->get();
+
+        // Calcular victorias y derrotas simples
+        $estadisticasEquipos = [];
+        foreach ($equipos as $equipo) {
+            $ganados = 0;
+            $perdidos = 0;
+
+            foreach ($partidosFinalizados as $partido) {
+                if ($partido->equipo_local_id == $equipo->id) {
+                    if ($partido->puntos_local > $partido->puntos_visitante) {
+                        $ganados++;
+                    } elseif ($partido->puntos_local < $partido->puntos_visitante) {
+                        $perdidos++;
+                    }
+                }
+                if ($partido->equipo_visitante_id == $equipo->id) {
+                    if ($partido->puntos_visitante > $partido->puntos_local) {
+                        $ganados++;
+                    } elseif ($partido->puntos_visitante < $partido->puntos_local) {
+                        $perdidos++;
+                    }
+                }
+            }
+
+            $estadisticasEquipos[] = [
+                'equipo' => $equipo,
+                'ganados' => $ganados,
+                'perdidos' => $perdidos,
+                'jugados' => $ganados + $perdidos,
+            ];
+        }
+
+        return view('partidos.estadisticas', compact('partidosFinalizados', 'estadisticasEquipos'));
+    }
 }

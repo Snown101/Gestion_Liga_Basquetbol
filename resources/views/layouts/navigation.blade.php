@@ -15,6 +15,20 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('equipos.index')" :active="request()->routeIs('equipos.*')">
+                        {{ __('Equipos') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('jugadores.index')" :active="request()->routeIs('jugadores.*')">
+                        {{ __('Jugadores') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('partidos.index')" :active="request()->routeIs('partidos.*')">
+                        {{ __('Partidos') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('estadisticas')" :active="request()->routeIs('estadisticas')">
+                        {{ __('Estadísticas') }}
+                    </x-nav-link>
                 </div>
             </div>
 

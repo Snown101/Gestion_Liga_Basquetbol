@@ -23,5 +23,6 @@ Route::middleware('auth')->group(function () {
 Route::resource('equipos', EquipoController::class)->middleware('auth');
 Route::resource('jugadores', JugadorController::class)->middleware('auth');
 Route::resource('partidos', PartidoController::class)->middleware('auth');
+Route::get('/estadisticas', [PartidoController::class, 'estadisticas'])->middleware('auth')->name('estadisticas');
 
 require __DIR__.'/auth.php';
