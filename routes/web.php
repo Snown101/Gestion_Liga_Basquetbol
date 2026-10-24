@@ -7,11 +7,21 @@ use App\Http\Controllers\JugadorController;
 use App\Http\Controllers\PartidoController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $totalEquipos = \App\Models\Equipo::count();
+    $totalJugadores = \App\Models\Jugador::count();
+    $totalPartidos = \App\Models\Partido::count();
+
+    $ultimosPartidos = \App\Models\Partido::with(['equipoLocal', 'equipoVisitante'])
+        ->where('estado', 'Finalizado')
+        ->orderBy('fecha', 'desc')
+        ->take(5)
+        ->get();
+
+    return view('dashboard', compact('totalEquipos', 'totalJugadores', 'totalPartidos', 'ultimosPartidos'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -21,7 +31,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('equipos', EquipoController::class)->middleware('auth');
-Route::resource('jugadores', JugadorController::class)->middleware('auth');
+Route::resource('jugadores', JugadorController::class)->middleware('auth')->parameters(['jugadores' => 'jugador']);
 Route::resource('partidos', PartidoController::class)->middleware('auth');
 Route::get('/estadisticas', [PartidoController::class, 'estadisticas'])->middleware('auth')->name('estadisticas');
 
